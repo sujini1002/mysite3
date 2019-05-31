@@ -21,15 +21,33 @@
 
 7. slf4j, Logback
 
-/WEB-INF
+mysite3
+ /WEB-INF
 	| ----- classes [src/main/java, scr/main/resoures, src/test/java, src/test/resources]
 		| ---- /com
 			| ---- /cafe24
 				 | ---- /mysite
 				 |	| --- /config
-				 |		| --- AppConfig
-				 |		| --- WebConfig
-				 |
-				 | ---- /config (회사가 공통으로 사용하는 설정들)
-				 	| --- /app
-				 	| --- /web
+				 |	|	| --- AppConfig
+				 |	|	| --- WebConfig
+				 |	
+				 | ---- /config (회사가 공통으로 사용하는 설정들  mysite가 얘를 땡겨서 사용)
+				 |	| --- /app (applicationContext.xml)
+				 |	|	| --- DBConfig
+				 |	|	| --- MyBatisConfig
+				 |	|	| --- /mybatis
+				 |	|	|	| --- configuration.xml
+				 |	|	|	| --- /mappers
+				 |	|	|	|	| --- user.xml
+				 |	|	|	|	| --- guestbook.xml
+				 |	|	| --- /properties
+				 |	|	|	| --- jdbc.proerties
+				 |	| --- /web (spring-servlet.xml)
+				 |	| 	| --- MVCConfig
+				 |	| 	| --- SecurityConfig
+				 |	|	| --- MessageConfig
+				 |	| 	| --- FileUploadConfig
+				 |	|	| --- /messages
+				 |	|			| --- /messages_ko.properties
+				 |	|	| --- /properties
+				 |	|	| 	 	| --- multipart.properties

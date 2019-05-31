@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
-	<display-name>mysite2</display-name>
+	<display-name>mysite3</display-name>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
@@ -20,7 +20,7 @@
 	
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:com.cafe24.mysite.config.app.AppConfig</param-value>
+		<param-value>com.cafe24.mysite.config.AppConfig</param-value>
 	</context-param>
 	
 	<!-- Context Loader Listener -->
@@ -51,12 +51,22 @@
 	<servlet>
 		<servlet-name>spring</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextClass</param-name>
+			<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+		</init-param>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>com.cafe24.mysite.config.WebConfig</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
-
+	<!-- mysite3에 web.xml이 아직 살아있다.. -->
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
 	<!-- 공통 에러 페이지 -->
 	<error-page>
 		<error-code>404</error-code>

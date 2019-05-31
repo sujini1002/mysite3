@@ -82,6 +82,16 @@ public class UserController {
 		}
 		return "user/updatesuccess";
 	}
+	
+	
+	//java Config에서 Interceptor를 위한 처리 (뒤에 핸들러 타겟이 없으면 오류가 발생한다. 없으면 no url-mapping오류 발생)
+	@RequestMapping(value="/auth", method = RequestMethod.POST)
+	public void auth() {}
+	
+	@RequestMapping(value="/logout", method = RequestMethod.GET)
+	public void logout() {}
+	
+	
 //	컨트롤러에서 처리
 //	@ExceptionHandler(Exception.class)
 //	public String handleUserDaoException() {
@@ -89,27 +99,3 @@ public class UserController {
 //	}
 
 }
-//@RequestMapping(value="/auth",method = RequestMethod.POST)
-//public String login(@RequestParam(value="email",required = true,defaultValue = "")String email,
-//					@RequestParam(value="password",required = true,defaultValue = "")String password,
-//					HttpSession session,
-//					Model model) {
-//	
-//	UserVo authUser = userService.getUser(new UserVo(email,password));
-//	if(authUser == null) {
-//		model.addAttribute("result", "fail");
-//		return "/user/login";
-//	}
-//	
-//	//session 처리(지금은 HttpSession을 사용(기술침투)하지만 나중엔 제거 예정-interceptor)
-//	session.setAttribute("authUser", authUser);
-//	
-//	
-//	return "redirect:/";
-//}
-//@RequestMapping(value="/logout",method = RequestMethod.GET)
-//public String logout(HttpSession session) {
-//	
-//	session.removeAttribute("authUser");
-//	return "redirect:/";
-//}

@@ -8,8 +8,8 @@
 		<typeAlias alias="pagingvo" type="com.cafe24.mysite.vo.PagingVo" />
 	</typeAliases>
 	<mappers>
-		<mapper resource="mybatis/mapper/user.xml" />
-		<mapper resource="mybatis/mapper/guestbook.xml" />
-		<mapper resource="mybatis/mapper/board.xml" />
+		<mapper resource="com/cafe24/config/app/mybatis/mapper/user.xml" />
+		<mapper resource="com/cafe24/config/app/mybatis/mapper/guestbook.xml" />
+		<mapper resource="com/cafe24/config/app/mybatis/mapper/board.xml" />
 	</mappers>
 </configuration>
