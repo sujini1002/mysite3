@@ -20,7 +20,7 @@
 	<![CDATA[
 		select no,name 
 		from user 
-		where email=#{email} and password=#{password}
+		where email=#{email} and password=#{email}
 	]]>
 	</select>
 	

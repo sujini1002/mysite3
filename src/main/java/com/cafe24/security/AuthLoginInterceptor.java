@@ -5,8 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.cafe24.mysite.service.UserService;
@@ -23,6 +21,7 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
+		
 //		잘못 된 문장 컨테이너 외의 새로운 userService를 만들었으므로 userService내의 userDao가 null이다.
 //		UserService userService = new UserService();
 
@@ -33,6 +32,7 @@ public class AuthLoginInterceptor extends HandlerInterceptorAdapter {
 		UserVo userVo = new UserVo();
 		userVo.setEmail(email);
 		userVo.setPassword(password);
+		System.out.println("login = "+userVo);
 		UserVo authUser = userService.getUser(userVo);
 		if(authUser == null) {
 			response.sendRedirect(request.getContextPath()+"/user/login");
