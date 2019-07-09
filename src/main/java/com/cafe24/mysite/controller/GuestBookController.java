@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cafe24.mysite.service.GuestBookService;
 import com.cafe24.mysite.vo.GuestBookVo;
@@ -29,7 +28,7 @@ public class GuestBookController {
 		return "guestbook/list";
 	}
 	
-	@RequestMapping("/add")
+	@RequestMapping(value="/add", method = RequestMethod.POST)
 	public String add(@ModelAttribute GuestBookVo guestbookvo) {
 		guestBookService.add(guestbookvo);
 		return "redirect:/guestbook";
