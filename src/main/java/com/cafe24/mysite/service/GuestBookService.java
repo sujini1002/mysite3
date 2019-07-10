@@ -26,4 +26,5 @@ public class GuestBookService {
 	public Boolean delete(GuestBookVo guestbookvo) {
 		return guestBookDao.delete(guestbookvo);
 	}
+	
 }
