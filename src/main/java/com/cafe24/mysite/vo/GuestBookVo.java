@@ -6,6 +6,19 @@ public class GuestBookVo {
 	private String password;
 	private String contents;
 	private String reg_date;
+
+	
+	public GuestBookVo(Long no,String name,String password,String contents,String reg_date) {
+		this.no = no;
+		this.name= name;
+		this.password = password;
+		this.contents = contents;
+		this.reg_date = reg_date;
+	}
+	public GuestBookVo() {
+		
+	}
+	
 	@Override
 	public String toString() {
 		return "GuestBookVo [no=" + no + ", name=" + name + ", password=" + password + ", contents=" + contents
@@ -40,5 +53,8 @@ public class GuestBookVo {
 	}
 	public void setReg_date(String reg_date) {
 		this.reg_date = reg_date;
+	}
+	public Object getNo2() {
+		return null;
 	}
 }
