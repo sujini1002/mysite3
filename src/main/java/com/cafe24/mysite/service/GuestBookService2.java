@@ -25,14 +25,12 @@ public class GuestBookService2 {
 	}
 
 	public GuestBookVo addContents(GuestBookVo guestbookVo) {
-		guestbookVo.setNo(10L);
-		guestbookVo.setReg_date("2019-07-10 11:19");
-		return guestbookVo;
+		return guestBookDao.insert2(guestbookVo);
 	}
 
-	public Long deleteContents(Long no, String password) {
+	public Boolean deleteContents(GuestBookVo vo) {
+		return guestBookDao.delete(vo);
 		
-		return no;
 	}
 
 }

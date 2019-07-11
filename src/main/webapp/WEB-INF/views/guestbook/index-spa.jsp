@@ -49,21 +49,28 @@
 	var startPage =0;
 	var userName = '${authUser.name}';
 	
-	var render = function(vo){
+	var render = function(vo,mode){
 		// 실제로는 template library 사용한다.
 		// - > ejs , underscore, mustache 
-		var html = "<li data-no='"+vo.no+"'>"+
-			"<strong>"+vo.name+"</strong>"+
-			"<p>"+vo.contents.replace(/\n/gi,"<br/>")+"</p>"+
-			"<a href='' data-no=''>삭제</a> </li>"
-		;
-		$('#list-guestbook').append(html);
+		var html = 
+			"<li data-no='" + vo.no + "'>" +
+			"<strong>" + vo.name + "</strong>" +
+			"<p>"  + vo.contents.replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/\n/gi, "<br>") + "</p>" +
+			"<strong></strong>" +
+			"<a href='' data-no='"+vo.no+"'>삭제</a>" + 
+			"</li>";
+			
+		if(mode){
+			$("#list-guestbook").prepend(html);
+		} else {
+			$("#list-guestbook").append(html);
+		}
 	};
 	var fetchList = function(){
 		if(isEnd){
 			return;
 		}
-		var lastNo = 0;
+		var lastNo = $('#list-guestbook li').last().data('no') || 0;//data-no
 		$.ajax({
 				url:"${pageContext.request.contextPath}/api/guestbook/list/"+lastNo,
 				type:"get",
@@ -76,15 +83,15 @@
 						console.error(response.message);
 						return ;
 					}
-					// isEnd 검증
+					// detect end
 					if(response.data.length == 0){
 						isEnd = true;
 						$("#btn-next").prop("disabled", true);
 						return;
 					}
 					
-					//rendering
-					$.each(response.data,function(index, vo){
+					// rendering
+					$.each(response.data, function(index, vo){
 						render(vo);
 					});
 					
@@ -94,7 +101,55 @@
 				}
 			});
 	};
+	
+	
 	$(function(){
+		
+		 var dialogDelete = $( "#dialog-delete-form" ).dialog({
+			      autoOpen: false,
+			      height: 200,
+			      width: 350,
+			      modal: true,
+			      buttons: {
+				        "삭제": function(){
+				        	var vo = {
+					        	no : Number($("#hidden-no").val()),
+					        	password : $('#dia-password').val()
+				        	};
+				        	
+				        	$.ajax({
+								url:"${pageContext.request.contextPath}/api/guestbook/delete",
+								type:"delete",
+								contentType:"application/json", //post방식으로 json으로 data를 보낼때 사용
+								//data:o.stringify(); // post방식에서 객체를 string으로 변환한다.
+								dataType: "json",
+								data:JSON.stringify(vo),
+								success: function(response){
+									if(response.result != "success"){
+										console.error(response.message);
+										return ;
+									}
+									//삭제
+									if(response.data){
+										$('#list-guestbook li[data-no="'+vo.no+'"]').remove();
+										dialogDelete.dialog('close');
+									}
+								},
+								error:function(jqXHR){
+									console.error();
+								}
+							});
+				        },
+				        "취소": function() {
+				        	dialogDelete.dialog( "close" );
+				        }
+			      },
+			      close: function() {
+			    	  $("#dia-password").val("");
+			    	  $("hidden-no").val("");
+			      }
+		    });
+		
 		$('#btn-next').click(function(){
 			fetchList();
 		});
@@ -106,16 +161,70 @@
 			var documentHeight = $(document).height();
 			
 			if(scrollTop + windowHeight + 10 > documentHeight){
-				//fetchList();
+				fetchList();
 			}
-		})
+		});
+		$('#add-form').submit(function(event){
+			//submit기본 동작을 막음 
+			//posting을 막음
+			event.preventDefault();
+			var vo = {};
+			
+			// validation (client side, UX , jQuery plugin) 지금은 생략
+			vo.name = $('#input-name').val();
+			vo.password = $('#input-password').val();
+			vo.contents = $("#tx-content").val();
+			
+			/* console.log($.param(vo));
+			console.log(JSON.stringify(vo)); */
+			
+			$.ajax({
+				url:"${pageContext.request.contextPath}/api/guestbook/add",
+				type:"post",
+				contentType:"application/json", //post방식으로 json으로 data를 보낼때 사용
+				dataType: "json",
+				data:JSON.stringify(vo), // post방식에서 객체를 string으로 변환한다.
+				success: function(response){
+					console.log(response);
+					if(response.result != "success"){
+						console.error(response.message);
+						return ;
+					}
+					//rendering
+					render(response.data, true);
+					
+					// reset form
+					$("#add-form")[0].reset();
+				},
+				error:function(jqXHR){
+					console.error();
+				}
+			});
+		});
+		// Live Event => delegation(위임) 방식
+		$(document).on('click','#guestbook ul li a',function(){
+			event.preventDefault();
+			
+			$('#hidden-no').val($(this).data('no'));
+			
+			dialogDelete.dialog('open');
+		});
 		
-		//최초 로딩시
+		
+		// 최초 리스트 가져오기
 		fetchList();
 	})
 </script>
 </head>
 <body>
+<div id="dialog-delete-form" title="해당 방명록 삭제">
+  <p class="validateTips">비밀번호를 입력하세요</p>
+ 
+  <form>
+      <input type="password" name="password" id="dia-password" value="" class="text ui-widget-content ui-corner-all">
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+  </form>
+</div>
 	<div id="container">
 		<c:import url="/WEB-INF/views/includes/header.jsp" />
 		<div id="content">
@@ -143,7 +252,7 @@
 			<button id="btn-next">Next Page</button>
 			<div id="dialog-message" title="" style="display:none">
   				<p></p>
-			</div>						
+			</div>	
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp">
 			<c:param name="menu" value="guestbook-ajax"/>

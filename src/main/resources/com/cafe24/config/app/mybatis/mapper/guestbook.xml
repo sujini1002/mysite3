@@ -14,6 +14,11 @@
 		<![CDATA[
 			insert into guestbook values(null,#{name},#{password},#{contents},now())
 		]]>
+		<selectKey keyProperty="no" resultType="long" order="AFTER"><!-- 본 쿼리가 끝난 후 실행  -->
+		<![CDATA[
+			select last_insert_id()
+		]]>
+	</selectKey>
 	</insert>
 	
 	<delete id="delete" parameterType="guestbookvo">
@@ -27,13 +32,14 @@
 	<![CDATA[
 		select no,name,contents,date_format(reg_date,'%Y-%m-%d %H:%i:%s') as reg_date
 		from guestbook 
-		
+		order by reg_date desc
+		limit 0,1
 	]]>
-	<if test="_parameter > 0"><!-- 기본형을 태그안에 사용할때는 꼭 _parameter라고 한다. -->
+<!-- 	<if test="_parameter > 0">기본형을 태그안에 사용할때는 꼭 _parameter라고 한다.
 		<![CDATA[
-			where no < #{_parameter}
+			where no = #{_parameter}
 		]]>
-	</if>
+	</if> -->
 	</select>
 	
 	<select id="getList3" resultType="guestbookvo" parameterType="long">

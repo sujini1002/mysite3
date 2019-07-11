@@ -24,9 +24,14 @@ public class GuestBookDao {
 		return 1==count;
 	}
 
-	public boolean insert(GuestBookVo vo) {
-		int count = sqlSession.insert("guestbook.insert", vo);
-		return 1==count;
+	public Boolean insert(GuestBookVo vo) {
+		Long count = (long) sqlSession.insert("guestbook.insert", vo);
+		return count==1;
+	}
+	public GuestBookVo insert2(GuestBookVo vo) {
+		sqlSession.insert("guestbook.insert", vo);
+		GuestBookVo result = sqlSession.selectOne("guestbook.getList2");
+		return result;
 	}
 	public List<GuestBookVo> getList() {
 		

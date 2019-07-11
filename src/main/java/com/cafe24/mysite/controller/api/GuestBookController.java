@@ -30,13 +30,13 @@ public class GuestBookController {
 	
 	@RequestMapping(value="/add", method = RequestMethod.POST)
 	public JSONResult add(@RequestBody GuestBookVo guestbookVo) { //json 객체를 GuestBookVo로 변환
-		GuestBookVo newVo= guestbookService2.addContents(guestbookVo);
-		return JSONResult.success(newVo);
+		GuestBookVo result= guestbookService2.addContents(guestbookVo);
+		return JSONResult.success(result);
 	}
 	
 	@RequestMapping(value="/delete", method = RequestMethod.DELETE)
-	public JSONResult deleteContenst(@RequestBody Map<String,Object>map) { //json 객체를 GuestBookVo로 변환
-		Long no= guestbookService2.deleteContents(((Integer) map.get("no")).longValue(),(String)map.get("password"));
-		return JSONResult.success(no);
+	public JSONResult deleteContenst(@RequestBody GuestBookVo vo) { //json 객체를 GuestBookVo로 변환
+		Boolean result= guestbookService2.deleteContents(vo);
+		return JSONResult.success(result);
 	}
 }
