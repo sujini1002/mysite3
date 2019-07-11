@@ -1,14 +1,8 @@
 package com.cafe24.mysite.repository;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +14,7 @@ import com.cafe24.mysite.vo.GuestBookVo;
 @Repository
 public class GuestBookDao {
 	
+	public static Integer PAGENUM = 5;
 	
 	@Autowired
 	private SqlSession sqlSession;
@@ -36,6 +31,10 @@ public class GuestBookDao {
 	public List<GuestBookVo> getList() {
 		
 		return sqlSession.selectList("guestbook.getList");
+	}
+	
+	public List<GuestBookVo> getList(Long lastNo) {
+		return sqlSession.selectList("guestbook.getList3",lastNo);
 	}
 
 	

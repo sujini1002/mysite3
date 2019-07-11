@@ -1,0 +1,128 @@
+@CHARSET "UTF-8";
+@import "mysite.css";
+
+#guestbook			{ margin:20px auto;	width:540px; }
+
+#guestbook form, 
+#guestbook table	{ width:100% }
+
+#guestbook table,	
+#guestbook table td { border:1px solid #333 }
+#guestbook table td { padding:5px }
+
+#guestbook ul		{ width:100%; margin-top:20px }
+#guestbook ul li	{ width:100%; margin-top:10px }
+
+
+#guestbook.delete-form	{ height:200px }
+#guestbook.delete-form form {
+	width:300px;
+	padding:10px;
+	border:1px solid #666;
+	border-radius: 10px;
+	margin:50px auto;
+}
+#guestbook.delete-form a	{ display:block; margin:20px auto; width:110px }
+
+#guestbook.delete-message p	{ padding:100px; height:50px; text-align:center }
+
+#guestbook textarea#content	{ width: 100%; border:none; height: 100px; resize: none; outline: none; }
+
+#guestbook-timeline{
+	width:540px;
+	margin:10px auto;
+}
+
+#guestbook-timeline h1{
+	height:60px;
+	background-image: url('/mysite3/assets/images/guestbook.png');
+	background-repeat:no-repeat;
+	background-position:7px 11px;
+	background-size:32px;
+	padding-left: 47px;
+	line-height:50px;
+}
+#guestbook-timeline form{
+	width: 100%;
+	margin-bottom: 10px;
+	/* border: 1px solid #333; */
+}
+
+#guestbook-timeline form input[type='text'],
+#guestbook-timeline form input[type='password'],
+#guestbook-timeline form textarea{
+	width:530px;
+	height: 20px;
+	outline:none;
+	margin-bottom:10px;
+	padding: 5px;
+}
+
+
+#guestbook-timeline form textarea{
+	height:68px;
+	resize: none;
+}
+
+#guestbook-timeline form input[type='submit']{
+	height: 30px;
+	width:541px;
+	background-color: #fff;
+	outline:none;
+	border: 1px solid #999;
+	color: #999;
+}
+
+#guestbook-timeline form input[type='submit']:hover{
+	background-color: #80C0C0;
+	outline:none;
+	border: 1px solid #80C0C0;
+	color: #fff;
+}
+
+#guestbook-timeline ul {
+	width:540px;
+	margin-top:30px;
+}
+
+#guestbook-timeline ul li{
+	width:520px;
+	height:100px;
+	margin-bottom:10px;
+	padding:10px;
+	position: relative;
+	background:url('/mysite3/assets/images/user.png') 0 30px no-repeat;
+	background-size: 40px;
+	
+}
+
+#guestbook-timeline ul strong,
+#guestbook-timeline ul a{
+/* 	display:block; */
+}
+
+#guestbook-timeline ul li p,
+#guestbook-timeline ul li strong{
+	padding-left:50px;
+}
+
+#guestbook-timeline ul li strong{
+	color:#8A8A8A;
+	position:absolute;
+	top:0;
+}
+#guestbook-timeline ul li p{
+	position:absolute;
+	top:40px;
+}
+
+#guestbook-timeline ul li a{
+	
+	width:50px;
+	height:50px;position:absolute;
+	top:30px;
+	left:0px; 
+	background:url('/mysite3/assets/images/delete.png') 22px 22px no-repeat;
+	background-size:25px;
+	font-size:0;
+}

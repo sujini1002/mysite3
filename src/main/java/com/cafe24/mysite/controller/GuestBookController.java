@@ -33,6 +33,11 @@ public class GuestBookController {
 		guestBookService.add(guestbookvo);
 		return "redirect:/guestbook";
 	}
+	@RequestMapping(value="/timeline")
+	public String timeline(Model model) {
+		model.addAttribute("list", guestBookService.getlist());
+		return "guestbook/index-timeline";
+	}
 	@RequestMapping(value="/delete/{no}", method = RequestMethod.GET)
 	public String delete(Model model,@PathVariable(value="no")long no) {
 		model.addAttribute("no", no);
@@ -48,5 +53,9 @@ public class GuestBookController {
 			return "redirect:/guestbook/delete/"+guestbookvo.getNo();
 		}
 		
+	}
+	@RequestMapping( value="/spa", method=RequestMethod.GET )
+	public String ajax() {
+		return "guestbook/index-spa";
 	}
 }

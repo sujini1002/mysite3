@@ -23,8 +23,8 @@ public class GuestBookController {
 	private GuestBookService2 guestbookService2;
 	
 	@RequestMapping(value="/list/{no}",method = RequestMethod.GET)
-	public JSONResult list(@PathVariable(value="no")int no) {
-		List<GuestBookVo> list = guestbookService2.getContentsList(1L);
+	public JSONResult list(@PathVariable(value="no")Long no) {
+		List<GuestBookVo> list = guestbookService2.getContentsList(no);
 		return JSONResult.success(list);
 	}
 	
@@ -35,7 +35,7 @@ public class GuestBookController {
 	}
 	
 	@RequestMapping(value="/delete", method = RequestMethod.DELETE)
-	public JSONResult add(@RequestBody Map<String,Object>map) { //json 객체를 GuestBookVo로 변환
+	public JSONResult deleteContenst(@RequestBody Map<String,Object>map) { //json 객체를 GuestBookVo로 변환
 		Long no= guestbookService2.deleteContents(((Integer) map.get("no")).longValue(),(String)map.get("password"));
 		return JSONResult.success(no);
 	}
