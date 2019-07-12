@@ -39,33 +39,62 @@
 }
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/ejs/ejs.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-	o = {
+var emptyFunction = function(){};
+// jQuery PlugIn
+(function($){
+	$.fn.flash = function(){
+		$(this).click(function(){
+			var isBlink = false;
+			var $that = $(this);
+			setInterval(function(){
+				$that.css("backgroundColor", isBlink ? "#f00" : "#aaa");
+				isBlink = !isBlink;
+			}, 1000);
+		})
+	}
+})(jQuery);
+/////////////////////////////////////
+var messageBox = function( title, message, callback ) {
+	$("#dialog-message").attr('title', title);
+	$("#dialog-message p").text(message)
+	$("#dialog-message").dialog({
+		modal: true,
+		buttons: {
+			"확인": function(){
+				$(this).dialog('close');
+			}
+		},
+		close: function(){
+			//....
+			//....
+			//....
+			(callback || emptyFunction)();
+		}
+	});
+}
+/////////////////////////////////
+	
+/* 	o = {
 			"id" : "tgif",
 			"password":"1234"
-	}
+	} */
+	//import ejs template
+	var listItemTemplate = new EJS({
+		url : '${pageContext.request.contextPath }/assets/js/ejs-templates/guestbook-list-item.ejs'
+		
+	});
+	var listTemplate = new EJS({
+		url : '${pageContext.request.contextPath }/assets/js/ejs-templates/guestbook-list.ejs'
+	});
+	
+	
 	var isEnd = false;
 	var startPage =0;
 	var userName = '${authUser.name}';
 	
-	var render = function(vo,mode){
-		// 실제로는 template library 사용한다.
-		// - > ejs , underscore, mustache 
-		var html = 
-			"<li data-no='" + vo.no + "'>" +
-			"<strong>" + vo.name + "</strong>" +
-			"<p>"  + vo.contents.replace(/</gi, "&lt;").replace(/>/gi, "&gt;").replace(/\n/gi, "<br>") + "</p>" +
-			"<strong></strong>" +
-			"<a href='' data-no='"+vo.no+"'>삭제</a>" + 
-			"</li>";
-			
-		if(mode){
-			$("#list-guestbook").prepend(html);
-		} else {
-			$("#list-guestbook").append(html);
-		}
-	};
 	var fetchList = function(){
 		if(isEnd){
 			return;
@@ -91,10 +120,12 @@
 					}
 					
 					// rendering
-					$.each(response.data, function(index, vo){
+					/* $.each(response.data, function(index, vo){
 						render(vo);
-					});
+					}); */
 					
+					var html = listTemplate.render(response);
+					$("#list-guestbook").append(html);
 				},
 				error:function(jqXHR){
 					console.error();
@@ -114,7 +145,7 @@
 				        "삭제": function(){
 				        	var vo = {
 					        	no : Number($("#hidden-no").val()),
-					        	password : $('#dia-password').val()
+					        	password : $('#password-delete').val()
 				        	};
 				        	
 				        	$.ajax({
@@ -145,14 +176,14 @@
 				        }
 			      },
 			      close: function() {
-			    	  $("#dia-password").val("");
-			    	  $("hidden-no").val("");
+						$("#password-delete").val("");
+						$("#hidden-no").val("");
 			      }
 		    });
 		
-		$('#btn-next').click(function(){
+		/* $('#btn-next').click(function(){
 			fetchList();
-		});
+		}); */
 		
 		$(window).scroll(function(){
 			var $window = $(this);
@@ -171,9 +202,26 @@
 			var vo = {};
 			
 			// validation (client side, UX , jQuery plugin) 지금은 생략
-			vo.name = $('#input-name').val();
-			vo.password = $('#input-password').val();
+			// validation (clinet side, UX, jQuery Validation Plug-in)
+			vo.name = $("#input-name").val();
+			if(vo.name == ''){
+				messageBox('글남기기', '이름은 필수 입력 항목입니다.', function(){
+					$('#input-name').focus();
+				});
+				return;
+			}		
+			vo.password = $("#input-password").val();
+			if(vo.password == ''){
+				messageBox('글남기기', '비밀번호는 필수 입력 항목입니다.', function(){
+					$('#input-password').focus();
+				});
+				return;
+			}		
 			vo.contents = $("#tx-content").val();
+			if(vo.contents == ''){
+				messageBox('글남기기', '내용은 필수 입력 항목입니다.');
+				return;
+			}	
 			
 			/* console.log($.param(vo));
 			console.log(JSON.stringify(vo)); */
@@ -191,7 +239,8 @@
 						return ;
 					}
 					//rendering
-					render(response.data, true);
+					var html = listItemTemplate.render(response.data);
+					$("#list-guestbook").prepend(html);
 					
 					// reset form
 					$("#add-form")[0].reset();
@@ -213,23 +262,32 @@
 		
 		// 최초 리스트 가져오기
 		fetchList();
+		
+		// jquery plugin test
+		$("#btn-next").flash();
 	})
 </script>
 </head>
 <body>
-<div id="dialog-delete-form" title="해당 방명록 삭제">
-  <p class="validateTips">비밀번호를 입력하세요</p>
- 
-  <form>
-      <input type="password" name="password" id="dia-password" value="" class="text ui-widget-content ui-corner-all">
-      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-  </form>
-</div>
+<div id="dialog-delete-form" title="메세지 삭제" style="display:none">
+  				<p class="validateTips normal">작성시 입력했던 비밀번호를 입력하세요.</p>
+  				<p class="validateTips error" style="display:none">비밀번호가 틀립니다.</p>
+  				<form>
+ 					<input type="password" id="password-delete" value="" class="text ui-widget-content ui-corner-all">
+					<input type="hidden" id="hidden-no" value="">
+					<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+  				</form>
+			</div>
+			<div id="dialog-message" title="" style="display:none">
+  				<p></p>
+			</div>	
 	<div id="container">
 		<c:import url="/WEB-INF/views/includes/header.jsp" />
 		<div id="content">
 			<div id="guestbook">
 				<h1>방명록</h1>
+				<button id="btn-next">flash jquery plug-in</button>
+				<br/>
 				<form id="add-form" action="" method="post">
 					<input type="text" id="input-name" placeholder="이름">
 					<input type="password" id="input-password" placeholder="비밀번호">
@@ -240,19 +298,7 @@
 								
 				</ul>
 			</div>
-			<div id="dialog-delete-form" title="메세지 삭제" style="display:none">
-  				<p class="validateTips normal">작성시 입력했던 비밀번호를 입력하세요.</p>
-  				<p class="validateTips error" style="display:none">비밀번호가 틀립니다.</p>
-  				<form>
- 					<input type="password" id="password-delete" value="" class="text ui-widget-content ui-corner-all">
-					<input type="hidden" id="hidden-no" value="">
-					<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-  				</form>
-			</div>
-			<button id="btn-next">Next Page</button>
-			<div id="dialog-message" title="" style="display:none">
-  				<p></p>
-			</div>	
+			
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp">
 			<c:param name="menu" value="guestbook-ajax"/>
