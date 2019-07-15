@@ -9,6 +9,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -31,6 +33,9 @@ import io.swagger.annotations.ApiOperation;
 @RestController("userAPIController")
 @RequestMapping("/user/api")
 public class UserController {
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	@Autowired
 	private UserService userService;
@@ -70,7 +75,10 @@ public class UserController {
 		if(validatorResults.isEmpty()==false) {
 			//오류 발생
 			for(ConstraintViolation<UserVo> validatorResult : validatorResults) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(JSONResult.fail(validatorResult.getMessage()));
+//				String message  = validatorResult.getMessage();
+				String message = messageSource.getMessage("Email.userVo.email", null, LocaleContextHolder.getLocale()); //한글 메세지를 위한 설정
+				JSONResult result = JSONResult.fail(message);
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
 			}
 		}
 		
