@@ -38,6 +38,7 @@ public class UserController {
 	//회원가입 동작
 	@RequestMapping(value="/join",method = RequestMethod.POST)
 	public String join(@ModelAttribute  @Valid UserVo userVo, BindingResult result,Model model) {
+		System.out.println("컨트롤러"+userVo);
 		
 		//Valid 체크가 틀릴 시, join form으로 넘김
 		if(result.hasErrors()) {
@@ -65,7 +66,7 @@ public class UserController {
 		return "user/login";
 	}
 	
-	@Auth
+	//@Auth
 	@RequestMapping( value="/update", method=RequestMethod.GET )
 	public String update(@AuthUser UserVo authUser,Model model ){
 		UserVo userVo = userService.getUser( authUser.getNo() );
@@ -84,12 +85,13 @@ public class UserController {
 	}
 	
 	
+	//eag
 	//java Config에서 Interceptor를 위한 처리 (뒤에 핸들러 타겟이 없으면 오류가 발생한다. 없으면 no url-mapping오류 발생)
-	@RequestMapping(value="/auth", method = RequestMethod.POST)
-	public void auth() {}
-	
-	@RequestMapping(value="/logout", method = RequestMethod.GET)
-	public void logout() {}
+//	@RequestMapping(value="/auth", method = RequestMethod.POST)
+//	public void auth() {}
+//	
+//	@RequestMapping(value="/logout", method = RequestMethod.GET)
+//	public void logout() {}
 	
 	
 //	컨트롤러에서 처리

@@ -78,7 +78,7 @@ public class UserControllerTest {
 		userVo2.setName("강수진");
 		userVo2.setEmail("aufcl@naver.com");
 		userVo2.setPassword("susjoD@oiew34");
-		userVo2.setGender("");
+		userVo2.setGender("woman");
 		
 		resultActions = mockMvc.perform(post("/user/api/join")
 				.contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(userVo2))).andDo(print());
@@ -103,33 +103,6 @@ public class UserControllerTest {
 		
 		resultActions.andExpect(status().isBadRequest())
 		.andExpect(jsonPath("$.result",is("fail")));
-
-//		// Invalidation in login Data
-//		UserVo userVo2 = new UserVo();
-//		userVo2.setName("강수진");
-//		userVo2.setEmail("aufcl@naver.com");
-//		userVo2.setPassword("susjooiew34");
-//		userVo2.setGender("MALE");
-//		
-//		resultActions = mockMvc.perform(post("/user/api/join")
-//				.contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(userVo2))).andDo(print());
-//		
-//		resultActions.andExpect(status().is4xxClientError())
-//		.andExpect(jsonPath("$.result",is("fail")))
-//		;
-//		
-//		// Invalidation in Gender Join Data
-//		userVo2.setName("강수진");
-//		userVo2.setEmail("aufcl@naver.com");
-//		userVo2.setPassword("susjoD@oiew34");
-//		userVo2.setGender("");
-//		
-//		resultActions = mockMvc.perform(post("/user/api/join")
-//				.contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(userVo2))).andDo(print());
-//		
-//		resultActions.andExpect(status().is4xxClientError())
-//		.andExpect(jsonPath("$.result",is("fail")))
-//		;
 		
 	}
 }

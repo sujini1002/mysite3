@@ -71,7 +71,7 @@
             						text="${errors.getFieldError( 'name' ).defaultMessage }" /><!-- 코드에 해당안되는 에러메세지인 경우 defaultmessage출력 -->
          					</p>
    						</c:if>
-					</spring:hasBindErrors>	
+					</spring:hasBindErrors>
 					
 					<label class="block-label" for="email">이메일</label>
 					<form:input path="email" />

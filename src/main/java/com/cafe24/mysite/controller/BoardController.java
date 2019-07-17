@@ -46,14 +46,14 @@ public class BoardController {
 	}
 	
 	//write페이지 가기
-	@Auth(role=Auth.Role.USER)
+	//@Auth(role=Auth.Role.USER)
 	@RequestMapping(value="/write",method = RequestMethod.GET)
 	public String write() {
 		return "board/write";
 	}
 	
 	//답글
-	@Auth
+	//@Auth
 	@RequestMapping(value="/write/{no}",method = RequestMethod.GET)
 	public String write(@PathVariable(value="no")long no,Model model) {
 		
@@ -121,7 +121,7 @@ public class BoardController {
 		return "board/view";
 	}
 	//수정 화면 
-	@Auth
+	//@Auth
 	@RequestMapping(value="/modify/{no}", method = RequestMethod.GET)
 	public String update(@PathVariable(value="no")long no,Model model) {
 		BoardVo boardVo = boardService.getView(no);
@@ -135,7 +135,7 @@ public class BoardController {
 		return "redirect:/board/view/"+boardVo.getNo();
 	}
 	//삭제
-	@Auth
+	//@Auth
 	@RequestMapping(value="/delete/{no}")
 	public String delete(@PathVariable(value="no")long no,@AuthUser UserVo authUser) {
 		//삭제

@@ -1,7 +1,6 @@
 
 package com.cafe24.mysite.validator;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.validation.ConstraintValidator;
@@ -18,10 +17,11 @@ public class GenderValidator implements ConstraintValidator<ValidGender, String>
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
+		
 		if(value == null || value.length() == 0 || "".contentEquals(value)) {
 			return false;
 		}
-		
+		System.out.println("성별 정규식 맞냐?"+pattern.matcher(value).matches());
 		return pattern.matcher( value ).matches();
 	}
 }

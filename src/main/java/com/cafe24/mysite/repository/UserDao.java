@@ -19,6 +19,16 @@ public class UserDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
+	public UserVo get1(String email) {
+		System.out.println("dao"+email);
+		UserVo vo = new UserVo();
+		vo.setNo(3L);
+		vo.setName("둘리");
+		vo.setEmail("aufcl@naver.com");
+		vo.setPassword("1234");
+		return vo;
+	}
+	
 //	@Autowired
 //	private DataSource dataSource;
 	
