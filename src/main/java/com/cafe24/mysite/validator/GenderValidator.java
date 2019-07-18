@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 import com.cafe24.mysite.validator.constraints.ValidGender;
 
 public class GenderValidator implements ConstraintValidator<ValidGender, String> {
-	private Pattern pattern = Pattern.compile("MALE|FEMALE|NONE"); 
+	private Pattern pattern = Pattern.compile("male|female|none"); 
 	
 	@Override
 	public void initialize(ValidGender constraintAnnotation) {

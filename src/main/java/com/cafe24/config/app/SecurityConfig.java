@@ -2,14 +2,22 @@
 package com.cafe24.config.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.cafe24.mysite.security.CustomUrlAuthenticationSuccessHandler;
 
 
 /*
@@ -82,45 +90,88 @@ public class SecurityConfig
 //	      .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
 	     //.antMatchers("/admin/**").hasRole("ADMIN")
 	      .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+	      .antMatchers("/gallery/upload","/gallery/delete/").hasAuthority("ROLE_ADMIN")
 	      
 	      //모두허용(위에 안걸린다면)
 //	      .antMatchers("/**").permitAll()
 	      .anyRequest().permitAll()
-	      ;
+	      
 		 
 		 //
 		 //2. Temporary for testing csrf 설정
 		 //
-		 http.csrf().disable();
+//		 http.csrf().disable();
 		 
 		 
 		 //
 		 //3. 로그인 설정
 		 //
-		 http
+		 .and()
 		 .formLogin()
 		 .loginPage("/user/login")
 		 .loginProcessingUrl("/user/auth") //form에 연결된 url을 여기에 설정
-		 .defaultSuccessUrl("/",true)
 		 .failureUrl("/user/login?result=fail")
+//		 .defaultSuccessUrl("/",true)
+		 .successHandler(authenticationSuccessHandler())
 		 .usernameParameter("email")
 		 .passwordParameter("password")
-		 ;
+		 
 		 
 		 //
-		 //3. 로그아웃 설정
+		 //4. 로그아웃 설정
 		 //
-		 http
+		 .and()
 		 .logout()
 		 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
 		 .logoutSuccessUrl("/")
 		 .invalidateHttpSession(true)
+		 
+		 
+		 //
+		 //4. access Denia Handler
+		 //
+		 .and()
+		 .exceptionHandling()
+		 .accessDeniedPage("/WEB-INF/views/error/400.jsp")
+		 
+		 //
+		 //5. RememberMe
+		 //
+		 .and()
+		 .rememberMe()
+		 .key("mysite3")
+		 .rememberMeParameter("remember-me")
 		 ;
-	   
+		 
+		// Temporary for Testing
+		http.csrf().disable();
+		 
 	}
 	//UserDetailService를 설정
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		 auth.userDetailsService(userDetailsService);
+		 auth
+		 .userDetailsService(userDetailsService)
+		 .and()
+		 .authenticationProvider(authenticationProvider())
+		 ;
+	}
+	//패스워드 인코딩?
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(passwordEncoder());
+		return authProvider;
+	}
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder(); 
+	}
+	
+	// AuthenticationSuccessHandler 등록
+	public AuthenticationSuccessHandler authenticationSuccessHandler() {
+		return new CustomUrlAuthenticationSuccessHandler();
 	}
 }
