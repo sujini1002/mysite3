@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.cafe24.mysite.security.AuthUser;
+import com.cafe24.mysite.security.SecurityUser;
 import com.cafe24.mysite.service.UserService;
 import com.cafe24.mysite.vo.UserVo;
-import com.cafe24.security.Auth;
-import com.cafe24.security.AuthUser;
 
 
 @Controller
@@ -66,22 +66,29 @@ public class UserController {
 		return "user/login";
 	}
 	
-	//@Auth
 	@RequestMapping( value="/update", method=RequestMethod.GET )
-	public String update(@AuthUser UserVo authUser,Model model ){
-		UserVo userVo = userService.getUser( authUser.getNo() );
+	public String update(
+		@AuthUser SecurityUser securityUser,
+		Model model ){
+		UserVo userVo = userService.getUser( securityUser.getNo() );
 		model.addAttribute( "userVo", userVo );
 		return "user/update";
 	}
 	
-	@RequestMapping(value="/update",method = RequestMethod.POST)
-	public String update(@AuthUser UserVo updateUserVo,HttpSession session,Model model) {
-		
-		boolean result = userService.update(updateUserVo);
-		if(result) {
-			session.setAttribute("authUser", updateUserVo);
+	@RequestMapping( value="/update", method=RequestMethod.POST )
+	public String update( HttpSession session, @ModelAttribute UserVo userVo ){
+		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		if(authUser == null) {
+			return "redirect:/";
 		}
-		return "user/updatesuccess";
+		
+		userVo.setNo( authUser.getNo() );
+		userService.update( userVo );
+		
+		// session의 authUser 변경
+		authUser.setName(userVo.getName());
+		
+		return "redirect:/user/update?result=success";
 	}
 	
 	

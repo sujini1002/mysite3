@@ -28,6 +28,8 @@ public class UserVo {
 	@ValidGender
 	private String gender;
 	
+	private String role = "ROLE_USER";
+	
 	private String join_date;
 	
 	public UserVo() {
@@ -72,6 +74,13 @@ public class UserVo {
 	public void setJoin_date(String join_date) {
 		this.join_date = join_date;
 	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
 	@Override
 	public String toString() {
 		return "UserVo [no=" + no + ", name=" + name + ", email=" + email + ", password=" + password + ", gender="

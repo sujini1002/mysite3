@@ -1,10 +1,8 @@
 package com.cafe24.mysite.security;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,23 +20,20 @@ public class UserDeatailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserVo userVo = userDao.get1(username);
+		UserVo userVo = userDao.get(username);
 		System.out.println("loadUserByUsername :"+userVo);
 		SecurityUser securityUser = new SecurityUser();
 
 		if (userVo != null) {
-
-			String role = "ROLE_USER";
+			securityUser.setNo(userVo.getNo());
 			securityUser.setName(userVo.getName());
 			securityUser.setUsername(userVo.getEmail());
 			securityUser.setPassword(userVo.getPassword());
-
-			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-			authorities.add(new SimpleGrantedAuthority(role));
-			securityUser.setAuthorities(authorities);
+			// Arrays.asList() : 가변 변수
+			securityUser.setAuthorities(Arrays.asList(new SimpleGrantedAuthority(userVo.getRole())));
 
 		}
-
+//		return new User();
 		return securityUser;
 
 	}

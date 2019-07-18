@@ -35,8 +35,8 @@ public class UserDao {
 	public UserDao() {
 		System.out.println("userDao 생성");
 	}
-	public Boolean update(UserVo vo) {
-		int count  = sqlSession.update("user.update",vo);
+	public Boolean update(UserVo userVo) {
+		int count  = sqlSession.update("user.update",userVo);
 		return 1 == count;
 	}
 

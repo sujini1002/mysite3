@@ -8,12 +8,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SecurityUser implements UserDetails{
 	private static final long serialVersionUID = 1L;
 	
+	//security fields
 	private Collection<? extends GrantedAuthority> authorities;
-	private String username;// email (Principal
+	private String username;// email (Principal) biz name
 	private String password;// credential
 	
-	//etc
-	private String name; // 성명 biz data
+	//domain fields(principal, 보호할 사용자 중요 데이터)
+	private String name; // 성명 domain data
+	private Long no;
+	
+	
+	public Long getNo() {
+		return no;
+	}
+
+	public void setNo(Long no) {
+		this.no = no;
+	}
 
 	public String getName() {
 		return name;
