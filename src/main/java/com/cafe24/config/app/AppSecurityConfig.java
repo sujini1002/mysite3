@@ -29,12 +29,12 @@ Security Filter Chain
 5. UsernamePasswordAuthenticationFilter	( auto-config default, V )
 6. DefaultLoginPageGeneratingFilter		( auto-config default )
 7. CasAuthenticationFilter
-8. BasicAuthenticationFilter				( auto-config default, V )
+8. BasicAuthenticationFilter				( auto-config default )
 9. RequestCacheAwareFilter					( auto-config default )
 10. SecurityContextHolderAwareRequestFilter	( auto-config default )
 11. JaasApiIntegrationFilter
-12. RememberMeAuthenticationFilter          (                      V)  
-13. AnonymousAuthenticationFilter			( auto-config default )
+12. RememberMeAuthenticationFilter          (                      V )  - 과제 
+13. AnonymousAuthenticationFilter			( auto-config default, V )
 14. SessionManagementFilter					( auto-config default )
 15. ExceptionTranslationFilter				( auto-config default, V )
 16. FilterSecurityInterceptor				( auto-config default, V )	
@@ -42,7 +42,7 @@ Security Filter Chain
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig 
+public class AppSecurityConfig 
 	extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -124,6 +124,7 @@ public class SecurityConfig
 		 .logout()
 		 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
 		 .logoutSuccessUrl("/")
+		 .deleteCookies("JSESSIONID")
 		 .invalidateHttpSession(true)
 		 
 		 
@@ -156,7 +157,7 @@ public class SecurityConfig
 		 .authenticationProvider(authenticationProvider())
 		 ;
 	}
-	//패스워드 인코딩?
+	//패스워드 인코딩
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		
